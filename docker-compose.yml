@@ -1,0 +1,79 @@
+version: '3.7'
+services:
+  consul:
+    image: consul:1.4.4
+    hostname: consul
+    networks:
+      - local
+    ports:
+      - 8500:8500
+    volumes:
+      - ./consul-data:/consul/data
+
+  rabbitmq:
+    # image: rabbitmq:3.7.13-management-alpine
+    image: rabbitmq:3.8.0-beta.3-management-alpine
+    hostname: rabbitmq
+    networks:
+      - local
+    environment:
+      - RABBITMQ_DEFAULT_USER=sa
+      - RABBITMQ_DEFAULT_PASS=Sa123456
+      - RABBITMQ_ERLANG_COOKIE='bjk1903'
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - ./rabbitmq-data:/var/lib/rabbitmq
+  redis:
+    image: redis:5.0.4-alpine
+    hostname: redis
+    networks:
+      - local
+    ports:
+      - 6379:6379
+    volumes:
+      - ./redis-data:/data
+  mysql:
+    image: hub.c.163.com/library/mysql:5.7
+    ports:
+      - "127.0.0.1:3306:3306"
+    volumes:
+      - ./mysql-data:/var/lib/mysql
+      - ./mysql-my.cnf:/etc/my.cnf
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+networks:
+  local:
+    # external: true
+# volumes:
+#   consul-data:
+#     driver: local
+#     driver_opts:
+#       o: bind
+#       type: none
+#       device: ./consul-data
+#   rabbitmq-data:
+#     driver: local
+#     driver_opts:
+#       o: bind
+#       type: none
+#       device: ./rabbitmq-data
+#   redis-data:
+#     driver: local
+#     driver_opts:
+#       o: bind
+#       type: none
+#       device: ./redis-data
+#   mysql-data: 
+#     driver: local
+#     driver_opts:
+#       o: bind
+#       type: none
+#       device: ./mysql-data
+#   mysql-mycnf:
+#     driver: local
+#     driver_opts:
+#       o: bind
+#       type: none
+#       device: ./my.cnf
